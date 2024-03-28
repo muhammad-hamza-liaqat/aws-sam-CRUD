@@ -19,18 +19,15 @@ Resources:
   ChainServerlessFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: chainController.handler
+      Handler: carController.handler
       CodeUri: src/
       Runtime: nodejs20.x
       # Policies:
       #   - S3WritePolicy: {}
       Environment:
         Variables:
-          JWT_SECRET: "IAmASecret05dev@@crack"
-          MONGODB_URI: "mongodb+srv://munirraza0047:3XLqYSVU6ygnbtlc@socketchat.enjbje9.mongodb.net/10DServerless"
-          AWS_ACCESS_KEY: !Ref AWS_ACCESS_KEY
-          AWS_SECRET_ACCESS_KEY: !Ref AWS_SECRET_ACCESS_KEY
-          AWS_BUCKET_NAME: !Ref AWS_BUCKET_NAME
+          # database cluster connection
+          MONGODB_URI: "mongodb+srv://hamza:hamza12345@cluster0.i5jzrrb.mongodb.net/10D"
       Events:
         Auth:
           Type: Api
@@ -43,33 +40,28 @@ Resources:
         GetChainEvent:
           Type: Api
           Properties:
-            Path: /getAllChain
+            Path: /getAllCars
             Method: get
         AddChainEvent:
           Type: Api
           Properties:
-            Path: /addChain
+            Path: /addCars
             Method: post
         GetChainByIdEvent:
           Type: Api
           Properties:
-            Path: /getChainById/{id}
+            Path: /getCarById/{id}
             Method: get
         UpdateChainEvent:
           Type: Api
           Properties:
-            Path: /updateChain/{id}
+            Path: /updateCar/{id}
             Method: put
         DeleteChainEvent:
           Type: Api
           Properties:
-            Path: /deleteChain/{id}
+            Path: /deleteCar/{id}
             Method: delete
-        PauseChainEvent:
-          Type: Api
-          Properties:
-            Path: /pauseChain/{id}
-            Method: put
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
     Properties:

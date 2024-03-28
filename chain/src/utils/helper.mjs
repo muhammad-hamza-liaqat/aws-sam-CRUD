@@ -1,8 +1,6 @@
-import User from "../user.model.mjs";
 import * as yup from "yup";
 import mongoose from "mongoose";
 import StatusCodes from "http-status-codes";
-import jwt from "jsonwebtoken";
 
 //DB Connection
 export const DBConn = async () => {
@@ -37,15 +35,6 @@ export class HTTPResponse {
   }
 }
 
-//Validation Schema
-export const chainSchema = yup.object().shape({
-  name: yup.string().required("Name is required"),
-  icon: yup.string(),
-  seedAmount: yup.number().required("Seed Amount is required"),
-  childNodes: yup.number().required("Child Nodes is required"),
-  parentPercentage: yup.number().required("Parent Percentage is required"),
-});
-
 //Catch Error Function
 export const catchError = async (error) => {
   if (error instanceof yup.ValidationError) {
@@ -63,23 +52,5 @@ export const catchError = async (error) => {
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       body: JSON.stringify({ message: "Something Went Wrong", error: error }),
     };
-  }
-};
-
-//Token Handler
-export const authToken = async (event) => {
-  const headers = event.headers;
-  const token = headers?.Authorization?.split(" ")[1];
-  console.log("TOKEN:", token);
-  if (!token) {
-    throw new HTTPError("Token is missing", UNAUTHORIZED);
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded["_id"]).select("-password");
-    event.user = user;
-    return JSON.stringify(event);
-  } catch (err) {
-    throw new HTTPError("Token is expired or invalid", UNAUTHORIZED, err);
   }
 };
